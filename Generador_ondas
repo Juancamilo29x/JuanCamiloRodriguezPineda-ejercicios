@@ -1,0 +1,63 @@
+import time
+import math
+
+
+def onda_cuadrada(amplitud, frecuencia, duracion):
+    periodo = 1.0 / frecuencia
+    medio_periodo = periodo / 2
+    tiempo_inicio = time.monotonic()
+    
+    while time.monotonic() - tiempo_inicio < duracion:
+        
+        print(amplitud)
+        time.sleep(medio_periodo)
+        
+        
+        print(-amplitud)
+        time.sleep(medio_periodo)
+
+
+def onda_triangular(amplitud, frecuencia, duracion):
+    periodo = 1.0 / frecuencia
+    medio_periodo = periodo / 2
+    tiempo_inicio = time.monotonic()
+    
+    while time.monotonic() - tiempo_inicio < duracion:
+        
+        for i in range(101):
+            valor = (-amplitud) + 2 * amplitud * (i / 100.0)
+            print(valor)
+            time.sleep(medio_periodo / 100)
+        
+        
+        for i in range(101):
+            valor = amplitud - 2 * amplitud * (i / 100.0)
+            print(valor)
+            time.sleep(medio_periodo / 100)
+
+
+def onda_sinusoidal(amplitud, frecuencia, duracion):
+    periodo = 1.0 / frecuencia
+    tiempo_inicio = time.monotonic()
+    
+    while time.monotonic() - tiempo_inicio < duracion:
+        for i in range(360):
+            valor = amplitud * math.sin(math.radians(i))
+            print(valor)
+            time.sleep(periodo / 360)
+
+
+tipo_onda = input("Selecciona el tipo de onda (cuadrada, triangular, sinusoidal): ").lower()
+amplitud = float(input("Introduce la amplitud: "))
+frecuencia = float(input("Introduce la frecuencia (Hz): "))
+duracion = float(input("Introduce la duración de la señal (segundos): "))
+
+
+if tipo_onda == "cuadrada":
+    onda_cuadrada(amplitud, frecuencia, duracion)
+elif tipo_onda == "triangular":
+    onda_triangular(amplitud, frecuencia, duracion)
+elif tipo_onda == "sinusoidal":
+    onda_sinusoidal(amplitud, frecuencia, duracion)
+else:
+    print("Tipo de onda no válido")
