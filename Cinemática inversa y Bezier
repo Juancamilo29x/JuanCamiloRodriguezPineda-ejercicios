@@ -1,0 +1,51 @@
+import math
+
+def cinematica_inversa(x, y, L1, L2):
+    distancia = math.sqrt(x**2 + y**2)
+    
+    if distancia > (L1 + L2):
+        raise ValueError("El punto está fuera del alcance del brazo.")
+
+    cos_ang2 = (x**2 + y**2 - L1**2 - L2**2) / (2 * L1 * L2)
+    ang2 = math.acos(cos_ang2)
+    
+    sin_ang2 = math.sqrt(1 - cos_ang2**2)  # Calcular el seno de ang2
+    ang1 = math.atan2(y, x) - math.atan2(L2 * sin_ang2, L1 + L2 * cos_ang2)
+
+    ang1 = math.degrees(ang1)
+    ang2 = math.degrees(ang2)
+    
+    return ang1, ang2
+
+
+def bezier(t, p0, p1, p2, p3):
+
+    return (1 - t)**3 * p0 + 3 * (1 - t)**2 * t * p1 + 3 * (1 - t) * t**2 * p2 + t**3 * p3
+
+def calcular_curva_bezier(t, puntos):
+    x = bezier(t, puntos[0][0], puntos[1][0], puntos[2][0], puntos[3][0])
+    y = bezier(t, puntos[0][1], puntos[1][1], puntos[2][1], puntos[3][1])
+    return (x, y)
+
+p0 = (0, 0)        # Primer punto
+p1 = (50, 150)     # Segundo punto
+p2 = (150, 150)    # Tercer punto
+p3 = (200, 0)      # Cuarto punto
+
+puntos_control = [p0, p1, p2, p3]
+
+L1 = 100  # Longitud del primer segmento
+L2 = 100  # Longitud del segundo segmento
+
+n_puntos = 20
+
+for i in range(n_puntos + 1):
+    t = i / n_puntos  # Variar t de 0 a 1
+    punto = calcular_curva_bezier(t, puntos_control)
+    x, y = punto
+
+    try:
+        angulo1, angulo2 = cinematica_inversa(x, y, L1, L2)
+        print(f"t={t:.2f} -> Punto en Bézier: ({x:.2f}, {y:.2f}), Ángulo 1: {angulo1:.2f}, Ángulo 2: {angulo2:.2f}")
+    except ValueError as e:
+        print(f"t={t:.2f} -> Punto en Bézier: ({x:.2f}, {y:.2f}) -> {e}")
